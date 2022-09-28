@@ -6,7 +6,8 @@ bin-release/
 
 # Other files and folders
 .settings/
-.config/config.env
+*.env
+node_modules/
 
 # Executables
 *.swf
