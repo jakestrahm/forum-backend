@@ -1,4 +1,6 @@
+// DONE
 const mongoose = require('mongoose')
+const slugify = require('slugify');
 
 const PostSchema = new mongoose.Schema({
     title: {
@@ -40,5 +42,8 @@ const PostSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Post', PostSchema)
 
-// TODO create slug
-// https://github.com/PacktPublishing/Node.js-API-Masterclass-with-Express-and-MongoDB/blob/master/models/Bootcamp.js
+//create slug of post name
+PostSchema.pre('save', function(next) {
+    this.slug = slugify(this.name, { lower: true });
+    next();
+});

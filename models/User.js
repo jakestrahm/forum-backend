@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-
+const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -7,6 +6,11 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'a name is required'],
         trim: true,
         maxLength: [30, 'display name cannot exceed 30 characters']
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     },
     about_me: {
         type: String,
@@ -40,6 +44,5 @@ const UserSchema = new mongoose.Schema({
 
 //TODO password encryption, tokens etc
 //https://github.com/PacktPublishing/Node.js-API-Masterclass-with-Express-and-MongoDB/blob/master/models/User.js
-
 module.exports = mongoose.model('User', UserSchema)
 

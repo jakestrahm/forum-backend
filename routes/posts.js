@@ -9,7 +9,7 @@ router
 
 router
     .route('/:id')
-    .get(getPosts)
+    .get(getPost)
     .put(putPost)
     .delete(deletePost)
 

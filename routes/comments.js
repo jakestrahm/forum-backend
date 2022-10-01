@@ -9,7 +9,7 @@ router
 
 router
     .route('/:id')
-    .get(getComments)
+    .get(getComment)
     .put(putComment)
     .delete(deleteComment)
 
