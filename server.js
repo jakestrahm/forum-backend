@@ -3,12 +3,14 @@ const dotenv = require('dotenv');
 const morgan = require('morgan')
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db')
+const cors = require('cors');
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
 
 //connect to database
 connectDB();
+
 
 //route files 
 const users = require('./routes/users')
@@ -21,6 +23,15 @@ const PORT = process.env.PORT || 6006;
 
 //create express application
 const app = express();
+
+//configuring cors 
+const corsOpts = {
+    origin: 'http://localhost:3000', //allow frontend
+    credentials: true,
+    optionSuccessStatus: 200
+}
+//use cors options 
+app.use(cors(corsOpts));
 
 //body parser
 app.use(express.json());
@@ -39,6 +50,7 @@ app.use('/api/v1/comments', comments)
 /* this has to be after the controller methods if i want to use this on them
     as middleware is executed in a linear order*/
 app.use(errorHandler)
+
 
 // listen for requests
 const server = app.listen(PORT, console.log(`server running in ${process} listening on ${PORT}`));

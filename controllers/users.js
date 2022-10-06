@@ -6,18 +6,46 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route get /api/v1/users
 // @access private
 exports.getUsers = asyncHandler(async (req, res, next) => {
+    //TODO explain path querying to micha?
 
     //create variable for storing query
     let query;
-    //stringify query string
-    let queryStr = JSON.stringify(req.query);
 
-    //correct query string syntax
+    //create copy of req.query
+    let reqQuery = { ...req.query }
+
+    //exclude fields
+    const excludeFields = ['select', 'sort'];
+
+    //loop over excludeFields and remove them from queryCopy
+    excludeFields.forEach(param => delete reqQuery[param]);
+
+    //stringify query string
+    let queryStr = JSON.stringify(reqQuery);
+
+    //recognize operators ($gt, $gte, etc)
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
 
-    //define query, passing query string
+    //find resource
     query = User.find(JSON.parse(queryStr))
 
+    //select fields
+    if (req.query.select) {
+        const fields = req.query.select.split(',').join(' ');
+        query = query.select(fields)
+    }
+
+    //sort
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        query = query.sort(sortBy)
+    } else {
+        //if no sort passed, then sort by date
+        query = query.sort('-creation_date')
+
+    }
+
+    //execute query
     const users = await query;
 
     res.status(200).json({ success: true, count: users.length, data: users })
