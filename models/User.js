@@ -47,6 +47,5 @@ const UserSchema = new mongoose.Schema({
 })
 
 //TODO password encryption, tokens etc
-//https://github.com/PacktPublishing/Node.js-API-Masterclass-with-Express-and-MongoDB/blob/master/models/User.js
 module.exports = mongoose.model('User', UserSchema)
 
