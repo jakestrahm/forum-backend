@@ -39,11 +39,11 @@ const PostSchema = new mongoose.Schema({
     }
 
 })
-
-module.exports = mongoose.model('Post', PostSchema)
-
 //create slug of post name
+// arrow functions handle this differently, this needs to be a regular function
 PostSchema.pre('save', function(next) {
-    this.slug = slugify(this.name, { lower: true });
+    this.slug = slugify(this.title, { lower: true });
     next();
 });
+
+module.exports = mongoose.model('Post', PostSchema)
