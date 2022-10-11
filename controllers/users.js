@@ -15,7 +15,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     let reqQuery = { ...req.query }
 
     //exclude fields
-    const excludeFields = ['select', 'sort'];
+    const excludeFields = ['select', 'sort', 'page', 'limit'];
 
     //loop over excludeFields and remove them from queryCopy
     excludeFields.forEach(param => delete reqQuery[param]);
@@ -29,7 +29,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     //find resource
     query = User.find(JSON.parse(queryStr))
 
-    //select fields
+    //select
     if (req.query.select) {
         const fields = req.query.select.split(',').join(' ');
         query = query.select(fields)
@@ -41,9 +41,17 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
         query = query.sort(sortBy)
     } else {
         //if no sort passed, then sort by date
-        query = query.sort('-creation_date')
-
+        query = query.sort('+creation_date')
     }
+
+    //pagination 
+    const page = parseInt(req.query.page, 10) || 1 //page 1 will be the default unless specified
+    const limit = parseInt(req.query.limit, 10) || 1
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const total = await User.countDocuments();
+
+    query = query.skip(startIndex).limit(limit);
 
     //execute query
     const users = await query;
