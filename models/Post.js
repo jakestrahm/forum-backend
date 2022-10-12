@@ -40,7 +40,7 @@ const PostSchema = new mongoose.Schema({
 
 })
 //create slug of post name
-// arrow functions handle this differently, this needs to be a regular function
+// arrow functions handle 'this' differently, this needs to be a regular function
 PostSchema.pre('save', function(next) {
     this.slug = slugify(this.title, { lower: true });
     next();

@@ -46,7 +46,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 
     //pagination 
     const page = parseInt(req.query.page, 10) || 1 //page 1 will be the default unless specified
-    const limit = parseInt(req.query.limit, 10) || 1
+    const limit = parseInt(req.query.limit, 10) || 25
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = await User.countDocuments();
@@ -56,7 +56,29 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     //execute query
     const users = await query;
 
-    res.status(200).json({ success: true, count: users.length, data: users })
+    //paganation result
+    const pagination = {};
+
+    if (endIndex < total) {
+        pagination.next = {
+            page: page + 1,
+            limit
+        }
+    }
+
+    if (startIndex > 0) {
+        pagination.prev = {
+            page: page - 1,
+            limit
+        }
+    }
+
+    res.status(200).json({
+        success: true,
+        count: users.length,
+        paganation: pagination,
+        data: users
+    })
 });
 
 // @desc create new user

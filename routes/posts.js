@@ -1,11 +1,17 @@
 const express = require('express');
-const { getPost, getPosts, postPost, putPost, deletePost } = require('../controllers/posts')
-const router = express.Router();
+const {
+    getPost,
+    getPosts,
+    postPost,
+    putPost,
+    deletePost } = require('../controllers/posts')
+
+const router = express.Router({ mergeParams: true });
 
 router
     .route('/')
-    .post(postPost)
     .get(getPosts)
+    .post(postPost)
 
 router
     .route('/:id')

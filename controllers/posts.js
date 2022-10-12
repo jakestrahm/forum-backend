@@ -1,12 +1,26 @@
 const asyncHandler = require('../middleware/async')
+const ErrorResponse = require('../utils/errorResponse');
 const Post = require('../models/Post')
 
 // @desc get all posts 
 // @route get /api/v1/posts
+// @route get /api/v1/users/:userId/posts
 // @access private
 exports.getPosts = asyncHandler(async (req, res, next) => {
-    const posts = await Post.find();
-    res.status(200).json({ success: true, data: posts })
+    let query;
+    if (req.params.userId) {
+        query = Post.find({ user: req.params.userId })
+    } else {
+        query = Post.find();
+    }
+
+    const posts = await query;
+
+    res.status(200).json({
+        success: true,
+        count: posts.length,
+        data: posts
+    })
 });
 
 // @desc get post by id
