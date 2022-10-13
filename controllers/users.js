@@ -56,7 +56,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     //execute query
     const users = await query;
 
-    //paganation result
+    //pagination result
     const pagination = {};
 
     if (endIndex < total) {
@@ -76,7 +76,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     res.status(200).json({
         success: true,
         count: users.length,
-        paganation: pagination,
+        pagination: pagination,
         data: users
     })
 });
