@@ -14,9 +14,7 @@ exports.getComments = asyncHandler(async (req, res, next) => {
     //"all comments for a post"
     if (req.params.postId) {
         reqQuery = { ...reqQuery, post: req.params.postId }
-        console.log('req.params.postId>>>', req.params.postId)
     } else {
-        console.log('req.params.postId>>>', req.params.postId)
     }
 
     //exclude fields

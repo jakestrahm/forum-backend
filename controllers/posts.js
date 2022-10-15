@@ -16,10 +16,7 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
     //"all posts by a user"
     if (req.params.userId) {
         reqQuery = { ...reqQuery, user: req.params.userId }
-        console.log('req.params.userId>>>', req.params.userId)
     } else {
-
-        console.log('req.params.userId>>>', req.params.userId)
     }
 
     //exclude fields
