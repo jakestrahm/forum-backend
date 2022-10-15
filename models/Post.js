@@ -30,8 +30,6 @@ const PostSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    //refs
-    //"all posts by user"
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',

@@ -43,8 +43,20 @@ const UserSchema = new mongoose.Schema({
     creation_date: {
         type: Date,
         default: Date.now
-    },
-})
+    }
+},
+    {
+        /* toJSON: { virtuals: true },
+        toObject: { virtuals: true } */
+    })
+
+//reverse populate with virtuals
+/* UserSchema.virtual('posts', {
+    ref: 'Post',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: false
+}) */
 
 //TODO password encryption, tokens etc
 module.exports = mongoose.model('User', UserSchema)
