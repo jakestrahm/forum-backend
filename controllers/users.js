@@ -6,8 +6,6 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route get /api/v1/users
 // @access private
 exports.getUsers = asyncHandler(async (req, res, next) => {
-    //TODO explain path querying to micha?
-
     //create variable for storing query
     let query;
 

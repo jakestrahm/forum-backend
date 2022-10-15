@@ -6,7 +6,14 @@ const {
     putPost,
     deletePost } = require('../controllers/posts')
 
+//include other resource routers
+const commentRouter = require('./comments')
+
 const router = express.Router({ mergeParams: true });
+// const router = express.Router();
+
+//re-route into other resource routers
+router.use('/:postId/comments', commentRouter)
 
 router
     .route('/')
