@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db')
 const cors = require('cors');
+const fileUpload = require('express-fileupload')
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
@@ -40,6 +41,9 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'))
 }
+
+//file uploading
+app.use(fileUpload())
 
 // mount routers
 app.use('/api/v1/users', users)

@@ -25,7 +25,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
 
     //find resource
-    query = User.find(JSON.parse(queryStr))
+    query = User.find(JSON.parse(queryStr)).populate('posts')
 
     //select
     if (req.query.select) {
@@ -137,7 +137,7 @@ exports.putUser = asyncHandler(async (req, res, next) => {
 // @route delete /api/v1/users/:id
 // @access private
 exports.deleteUser = asyncHandler(async (req, res, next) => {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
 
     if (!user) {
         return next(
@@ -145,8 +145,38 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
         )
     }
 
+    user.remove();
+
     res.status(200).json({
         success: true,
-        data: user
+        data: {}
     })
+});
+
+// @desc upload photo
+// @route put /api/v1/users/:id/photo
+// @access private
+exports.userPhotoUpload = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(
+            new ErrorResponse(`user with id ${req.params.id} not found`, 404)
+        )
+    }
+
+    if (!req.files) {
+        return next(
+            new ErrorResponse(`upload a file`, 404)
+        )
+    }
+
+    const file = req.files.file;
+
+    //ensure image is a photo 
+    if (!file.mimetype.startsWith('image')) {
+        return next(
+            new ErrorResponse(`upload a an image file`, 400)
+        )
+    }
 });

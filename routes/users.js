@@ -1,5 +1,6 @@
 const express = require('express');
 const {
+    userPhotoUpload,
     getUser,
     getUsers,
     postUser,
@@ -13,6 +14,8 @@ const router = express.Router();
 
 //re-route into other resource routers
 router.use('/:userId/posts', postRouter)
+
+router.route('/:id/photo').put(userPhotoUpload)
 
 router
     .route('/')
