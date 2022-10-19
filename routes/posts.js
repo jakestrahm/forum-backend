@@ -5,6 +5,8 @@ const {
     postPost,
     putPost,
     deletePost } = require('../controllers/posts')
+const advancedResults = require('../middleware/advancedResults')
+const Post = require('../models/Post')
 
 //include other resource routers
 const commentRouter = require('./comments')
@@ -17,7 +19,7 @@ router.use('/:postId/comments', commentRouter)
 
 router
     .route('/')
-    .get(getPosts)
+    .get(advancedResults(Post), getPosts)
     .post(postPost)
 
 router

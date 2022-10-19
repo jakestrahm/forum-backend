@@ -1,82 +1,13 @@
 const asyncHandler = require('../middleware/async')
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
+const path = require('path')
 
 // @desc get all users 
 // @route get /api/v1/users
 // @access private
 exports.getUsers = asyncHandler(async (req, res, next) => {
-    //create variable for storing query
-    let query;
-
-    //create copy of req.query
-    let reqQuery = { ...req.query }
-
-    //exclude fields
-    const excludeFields = ['select', 'sort', 'page', 'limit'];
-
-    //loop over excludeFields and remove them from queryCopy
-    excludeFields.forEach(param => delete reqQuery[param]);
-
-    //stringify query string
-    let queryStr = JSON.stringify(reqQuery);
-
-    //recognize operators ($gt, $gte, etc)
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
-
-    //find resource
-    query = User.find(JSON.parse(queryStr))
-
-    //select
-    if (req.query.select) {
-        const fields = req.query.select.split(',').join(' ');
-        query = query.select(fields)
-    }
-
-    //sort
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ')
-        query = query.sort(sortBy)
-    } else {
-        //if no sort passed, then sort by date
-        query = query.sort('+creation_date')
-    }
-
-    //pagination 
-    const page = parseInt(req.query.page, 10) || 1 //page 1 will be the default unless specified
-    const limit = parseInt(req.query.limit, 10) || 25
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const total = await User.countDocuments();
-
-    query = query.skip(startIndex).limit(limit);
-
-    //execute query
-    const users = await query;
-
-    //pagination result
-    const pagination = {};
-
-    if (endIndex < total) {
-        pagination.next = {
-            page: page + 1,
-            limit
-        }
-    }
-
-    if (startIndex > 0) {
-        pagination.prev = {
-            page: page - 1,
-            limit
-        }
-    }
-
-    res.status(200).json({
-        success: true,
-        count: users.length,
-        pagination: pagination,
-        data: users
-    })
+    res.status(200).json(res.advancedResults)
 });
 
 // @desc create new user
@@ -137,7 +68,7 @@ exports.putUser = asyncHandler(async (req, res, next) => {
 // @route delete /api/v1/users/:id
 // @access private
 exports.deleteUser = asyncHandler(async (req, res, next) => {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
 
     if (!user) {
         return next(
@@ -145,8 +76,65 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
         )
     }
 
+    user.remove();
+
     res.status(200).json({
         success: true,
-        data: user
+        data: {}
     })
+});
+
+// @desc upload photo
+// @route put /api/v1/users/:id/photo
+// @access private
+exports.userPhotoUpload = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(
+            new ErrorResponse(`user with id ${req.params.id} not found`, 404)
+        )
+    }
+
+    if (!req.files) {
+        return next(
+            new ErrorResponse(`upload a file`, 404)
+        )
+    }
+
+    const file = req.files.file;
+
+    //ensure image is a photo 
+    if (!file.mimetype.startsWith('image')) {
+        return next(
+            new ErrorResponse(`upload a an image file`, 400)
+        )
+    }
+
+    //limit filesize
+    if (file.size > process.env.MAX_FILE_UPLOAD) {
+        return next(
+            new ErrorResponse(`upload a an image less than ${process.env.MAX_FILE_UPLOAD}`, 400)
+        )
+    }
+
+    //create custom file name
+    file.name = `photo_${user._id}${path.parse(file.name).ext}`
+
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+        if (err) {
+            console.error(err);
+            return next(
+                new ErrorResponse(`image upload failed${process.env.MAX_FILE_UPLOAD}`, 500)
+            )
+        }
+
+        await User.findOneAndUpdate(req.params.id, { photo: file.name })
+
+        res.status(200).json({
+            success: true,
+            data: file.name
+        })
+    })
+
 });
