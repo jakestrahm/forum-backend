@@ -7,6 +7,9 @@ const {
     putUser,
     deleteUser } = require('../controllers/users')
 
+const advancedResults = require('../middleware/advancedResults')
+const User = require('../models/User')
+
 //include other resource routers
 const postRouter = require('./posts')
 
@@ -19,7 +22,7 @@ router.route('/:id/photo').put(userPhotoUpload)
 
 router
     .route('/')
-    .get(getUsers)
+    .get(advancedResults(User, 'posts'), getUsers)
     .post(postUser)
 
 router

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -34,12 +35,16 @@ const UserSchema = new mongoose.Schema({
         minlength: 6,
         select: false
     },
-    reset_password_token: String,
-    reset_password_expire: Date,
     reputation: {
         type: Number,
         default: 0
     },
+    photo: {
+        type: String,
+        default: 'no-photo.jpg'
+    },
+    reset_password_token: String,
+    reset_password_expire: Date,
     creation_date: {
         type: Date,
         default: Date.now
