@@ -18,7 +18,7 @@ connectDB();
 const users = require('./routes/users')
 const posts = require('./routes/posts')
 const comments = require('./routes/comments');
-const { request } = require('express');
+const auth = require('./routes/auth');
 
 //set port value
 const PORT = process.env.PORT || 6006;
@@ -52,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api/v1/users', users)
 app.use('/api/v1/posts', posts)
 app.use('/api/v1/comments', comments)
+app.use('/api/v1/auth', auth)
 
 //error handiling middleware
 /* this has to be after the controller methods if i want to use this on them

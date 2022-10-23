@@ -14,8 +14,8 @@ const UserSchema = new mongoose.Schema({
         * is that handled here? or only render the delete button if the person viewing has
         * the user id associated with the comment or post?
         */
-        enum: ['user', 'admin'],
-        default: 'viewer'
+        enum: ['user', 'admin'], //admin is done in compass, is this pointless?
+        default: 'user'
     },
     about_me: {
         type: String,
