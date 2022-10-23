@@ -8,7 +8,19 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route get /api/v1/posts/:postId/comments
 // @access private
 exports.getComments = asyncHandler(async (req, res, next) => {
-    res.status(200).json(res.advancedResults)
+    //check which route is being accessed
+    if (req.params.postId) {
+        const comments = await Comment.find({ post: req.params.postId })
+
+        return res.status(200).json({
+            success: true,
+            count: comments.length,
+            data: comments
+        })
+    } else {
+        res.status(200).json(res.advancedResults)
+    }
+
 });
 
 // @desc get comment by id
@@ -36,12 +48,14 @@ exports.postComment = asyncHandler(async (req, res, next) => {
     req.body.post = req.params.postId
     const post = await Post.findById(req.params.postId)
 
-    //check if user exists
+    //check if post exists
     if (!post) {
         return next(
             new ErrorResponse(`post with id ${req.params.postId} not found`, 404)
         )
     }
+
+    req.body.user = post.user
 
     const comment = await Comment.create(req.body)
 

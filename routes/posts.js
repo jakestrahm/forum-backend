@@ -5,8 +5,8 @@ const {
     postPost,
     putPost,
     deletePost } = require('../controllers/posts')
-const advancedResults = require('../middleware/advancedResults')
 const Post = require('../models/Post')
+const advancedResults = require('../middleware/advancedResults')
 
 //include other resource routers
 const commentRouter = require('./comments')

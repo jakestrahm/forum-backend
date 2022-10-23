@@ -8,7 +8,19 @@ const User = require('../models/User')
 // @route get /api/v1/users/:userId/posts
 // @access private
 exports.getPosts = asyncHandler(async (req, res, next) => {
-    res.status(200).json(res.advancedResults)
+    //check which route is being accessed
+    if (req.params.userId) {
+        //find all posts with "user" = userId
+        const posts = await Post.find({ user: req.params.userId })
+
+        return res.status(200).json({
+            success: true,
+            count: posts.length,
+            data: posts
+        })
+    } else {
+        res.status(200).json(res.advancedResults)
+    }
 });
 
 // @desc get post by id

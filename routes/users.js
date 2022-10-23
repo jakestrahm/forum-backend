@@ -7,8 +7,8 @@ const {
     putUser,
     deleteUser } = require('../controllers/users')
 
-const advancedResults = require('../middleware/advancedResults')
 const User = require('../models/User')
+const advancedResults = require('../middleware/advancedResults')
 
 //include other resource routers
 const postRouter = require('./posts')
