@@ -34,3 +34,4 @@
 - [ ] view_count
 - [ ] score
 - [ ] reputation
+- [ ] email password reset?
