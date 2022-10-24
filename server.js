@@ -6,6 +6,7 @@ const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db')
 const cors = require('cors');
 const fileUpload = require('express-fileupload')
+const cookieParser = require('cookie-parser')
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
@@ -37,6 +38,9 @@ app.use(cors(corsOpts));
 
 //body parser
 app.use(express.json());
+
+//cookie parser 
+app.use(cookieParser())
 
 //dev-env logging middleware
 if (process.env.NODE_ENV === 'development') {

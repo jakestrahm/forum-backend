@@ -7,19 +7,20 @@ const { getComment,
 
 const advancedResults = require('../middleware/advancedResults')
 const Comment = require('../models/Comment')
+const { protect, authorize } = require('../middleware/auth')
 
 const router = express.Router({ mergeParams: true });
 
 router
     .route('/')
-    .post(postComment)
+    .post(protect, authorize('publisher', 'admin'), postComment)
     .get(advancedResults(Comment), getComments)
 
 router
     .route('/:id')
     .get(getComment)
-    .put(putComment)
-    .delete(deleteComment)
+    .put(protect, authorize('publisher', 'admin'), putComment)
+    .delete(protect, authorize('publisher', 'admin'), deleteComment)
 
 module.exports = router;
 

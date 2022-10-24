@@ -9,6 +9,7 @@ const {
 
 const User = require('../models/User')
 const advancedResults = require('../middleware/advancedResults')
+const { protect, authorize } = require('../middleware/auth')
 
 //include other resource routers
 const postRouter = require('./posts')
@@ -18,7 +19,7 @@ const router = express.Router();
 //re-route into other resource routers
 router.use('/:userId/posts', postRouter)
 
-router.route('/:id/photo').put(userPhotoUpload)
+router.route('/:id/photo').put(protect, userPhotoUpload)
 
 router
     .route('/')
@@ -28,7 +29,7 @@ router
 router
     .route('/:id')
     .get(getUser)
-    .put(putUser)
-    .delete(deleteUser)
+    .put(protect, authorize('publisher', 'admin'), putUser)
+    .delete(protect, authorize('publisher', 'admin'), deleteUser)
 
 module.exports = router;

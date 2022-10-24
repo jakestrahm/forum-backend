@@ -7,12 +7,12 @@ const {
     deletePost } = require('../controllers/posts')
 const Post = require('../models/Post')
 const advancedResults = require('../middleware/advancedResults')
+const { protect, authorize } = require('../middleware/auth')
 
 //include other resource routers
 const commentRouter = require('./comments')
 
 const router = express.Router({ mergeParams: true });
-// const router = express.Router();
 
 //re-route into other resource routers
 router.use('/:postId/comments', commentRouter)
@@ -20,12 +20,12 @@ router.use('/:postId/comments', commentRouter)
 router
     .route('/')
     .get(advancedResults(Post), getPosts)
-    .post(postPost)
+    .post(protect, authorize('publisher', 'admin'), postPost)
 
 router
     .route('/:id')
     .get(getPost)
-    .put(putPost)
-    .delete(deletePost)
+    .put(protect, authorize('publisher', 'admin'), putPost)
+    .delete(protect, authorize('publisher', 'admin'), deletePost)
 
 module.exports = router;

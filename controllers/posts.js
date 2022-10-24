@@ -1,4 +1,5 @@
 const asyncHandler = require('../middleware/async')
+const { checkPermissions } = require('../middleware/auth')
 const ErrorResponse = require('../utils/errorResponse');
 const Post = require('../models/Post')
 const User = require('../models/User')
@@ -40,20 +41,12 @@ exports.getPost = asyncHandler(async (req, res, next) => {
 });
 
 // @desc create new post
-// @route post /api/v1/users/:userId/posts
+// @route post /api/v1/posts
 // @access private
 exports.postPost = asyncHandler(async (req, res, next) => {
+    console.log('req.user.id', req.user.id)
 
-    //set user = param in body
-    req.body.user = req.params.userId
-    const user = await User.findById(req.params.userId)
-
-    //check if user exists
-    if (!user) {
-        return next(
-            new ErrorResponse(`user with id ${req.params.userId} not found`, 404)
-        )
-    }
+    req.body.user = req.user.id
 
     const post = await Post.create(req.body)
 
@@ -74,6 +67,16 @@ exports.putPost = asyncHandler(async (req, res, next) => {
         return next(
             new ErrorResponse(`post with id ${req.params.id} not found`, 404)
         )
+    }
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== post.user.toString() && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
     }
 
     post = await Post.findOneAndUpdate(req.params.id, req.body, {
@@ -98,6 +101,16 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
         return next(
             new ErrorResponse(`post with id ${req.params.id} not found`, 404)
         )
+    }
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== post.user.toString() && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
     }
 
     await post.remove();

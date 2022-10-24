@@ -44,8 +44,11 @@ exports.getComment = asyncHandler(async (req, res, next) => {
 // @access private
 exports.postComment = asyncHandler(async (req, res, next) => {
 
-    //set post = param in body
+    //set body.post = postId in param
+    req.body.user = req.user.id
     req.body.post = req.params.postId
+
+    //try to find post in db
     const post = await Post.findById(req.params.postId)
 
     //check if post exists
@@ -55,7 +58,6 @@ exports.postComment = asyncHandler(async (req, res, next) => {
         )
     }
 
-    req.body.user = post.user
 
     const comment = await Comment.create(req.body)
 
@@ -76,6 +78,17 @@ exports.putComment = asyncHandler(async (req, res, next) => {
             new ErrorResponse(`comment with id ${req.params.id} not found`, 404)
         )
     }
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== comment.user.toString() && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
+    }
+
 
     comment = await Comment.findOneAndUpdate(req.params.id, req.body, {
         new: true,
@@ -99,6 +112,16 @@ exports.deleteComment = asyncHandler(async (req, res, next) => {
         return next(
             new ErrorResponse(`comment with id ${req.params.id} not found`, 404)
         )
+    }
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== comment.user.toString() && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
     }
 
     await comment.remove();

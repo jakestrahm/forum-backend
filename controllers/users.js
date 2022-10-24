@@ -46,10 +46,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 // @route put /api/v1/users/:id
 // @access private
 exports.putUser = asyncHandler(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
+    let user = await User.findById(req.params.id)
 
     if (!user) {
         return next(
@@ -57,10 +54,15 @@ exports.putUser = asyncHandler(async (req, res, next) => {
         )
     }
 
+    user = await User.findOneAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    })
+
     res.status(200).json({
         success: true,
         data: user
-    })
+    });
 
 });
 
@@ -68,12 +70,22 @@ exports.putUser = asyncHandler(async (req, res, next) => {
 // @route delete /api/v1/users/:id
 // @access private
 exports.deleteUser = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.params.id);
+    let user = await User.findById(req.params.id);
 
     if (!user) {
         return next(
             new ErrorResponse(`user with id ${req.params.id} not found`, 404)
         )
+    }
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== req.params.id && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
     }
 
     user.remove();
@@ -88,12 +100,23 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
 // @route put /api/v1/users/:id/photo
 // @access private
 exports.userPhotoUpload = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.params.id);
+    const user = req.user
+    /* const user = await User.findById(req.params.id);
 
     if (!user) {
         return next(
             new ErrorResponse(`user with id ${req.params.id} not found`, 404)
         )
+    } */
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== req.params.id && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
     }
 
     if (!req.files) {
