@@ -87,7 +87,7 @@ UserSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password)
 }
 
-//generate and has password token
+//generate and hash password token
 UserSchema.methods.getResetPasswordToken = function() {
     //generate token 
     const resetToken = crypto.randomBytes(20).toString('hex')
