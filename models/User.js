@@ -13,11 +13,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        /*owner's should be able to delete posts/comments they own
-        * is that handled here? or only render the delete button if the person viewing has
-        * the user id associated with the comment or post?
-        */
-        enum: ['user', 'admin'], //admin is done in compass, is this pointless?
+        enum: ['user', 'admin'],
         default: 'user'
     },
     about_me: {

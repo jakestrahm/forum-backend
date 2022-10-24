@@ -20,12 +20,12 @@ router.use('/:postId/comments', commentRouter)
 router
     .route('/')
     .get(advancedResults(Post), getPosts)
-    .post(protect, authorize('publisher', 'admin'), postPost)
+    .post(protect, authorize('admin'), postPost)
 
 router
     .route('/:id')
     .get(getPost)
-    .put(protect, authorize('publisher', 'admin'), putPost)
-    .delete(protect, authorize('publisher', 'admin'), deletePost)
+    .put(protect, authorize('admin'), putPost)
+    .delete(protect, authorize('admin'), deletePost)
 
 module.exports = router;

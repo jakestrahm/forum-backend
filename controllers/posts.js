@@ -9,6 +9,9 @@ const User = require('../models/User')
 // @route get /api/v1/users/:userId/posts
 // @access private
 exports.getPosts = asyncHandler(async (req, res, next) => {
+
+    console.log("req.params.userId", req.params.userId)
+
     //check which route is being accessed
     if (req.params.userId) {
         //find all posts with "user" = userId
@@ -62,6 +65,8 @@ exports.postPost = asyncHandler(async (req, res, next) => {
 exports.putPost = asyncHandler(async (req, res, next) => {
 
     let post = await Post.findById(req.params.id)
+    console.log('inital post: ', post)
+    console.log("req.params.id", req.params.id)
 
     if (!post) {
         return next(
@@ -83,6 +88,8 @@ exports.putPost = asyncHandler(async (req, res, next) => {
         new: true,
         runValidators: true
     })
+
+    console.log('post:', post)
 
     res.status(200).json({
         success: true,

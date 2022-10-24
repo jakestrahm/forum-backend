@@ -5,7 +5,6 @@ const path = require('path')
 
 // @desc get all users 
 // @route get /api/v1/users
-// @access private
 exports.getUsers = asyncHandler(async (req, res, next) => {
     res.status(200).json(res.advancedResults)
 });
@@ -24,7 +23,6 @@ exports.postUser = asyncHandler(async (req, res, next) => {
 
 // @desc get user by id
 // @route get /api/v1/users/:id
-// @access private
 exports.getUser = asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.params.id);
 
@@ -52,6 +50,16 @@ exports.putUser = asyncHandler(async (req, res, next) => {
         return next(
             new ErrorResponse(`user with id ${req.params.id} not found`, 404)
         )
+    }
+
+    //check if user should be able to perform operation 
+    if (req.user.id !== req.params.id && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `user ${req.user.id} is not authorized to access this route`,
+                401
+            )
+        );
     }
 
     user = await User.findOneAndUpdate(req.params.id, req.body, {

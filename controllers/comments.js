@@ -39,8 +39,8 @@ exports.getComment = asyncHandler(async (req, res, next) => {
     })
 });
 
-// @desc create new comment
-// @route comment /api/v1/posts/:postId/comments
+// @desc post new comment
+// @route post /api/v1/posts/:postId/comments
 // @access private
 exports.postComment = asyncHandler(async (req, res, next) => {
 

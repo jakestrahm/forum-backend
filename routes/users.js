@@ -18,7 +18,6 @@ const router = express.Router();
 
 //re-route into other resource routers
 router.use('/:userId/posts', postRouter)
-
 router.route('/:id/photo').put(protect, userPhotoUpload)
 
 router
@@ -29,7 +28,7 @@ router
 router
     .route('/:id')
     .get(getUser)
-    .put(protect, authorize('publisher', 'admin'), putUser)
-    .delete(protect, authorize('publisher', 'admin'), deleteUser)
+    .put(protect, authorize('admin'), putUser)
+    .delete(protect, authorize('admin'), deleteUser)
 
 module.exports = router;
