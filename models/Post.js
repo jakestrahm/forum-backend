@@ -35,19 +35,6 @@ const PostSchema = new mongoose.Schema({
         required: true
     }
 
-},
-    {
-        toJSON: { virtuals: true },
-        toObject: { virtuals: true }
-    }
-)
-//TODO not working
-//reverse populate with virtuals
-PostSchema.virtual('comments', {
-    ref: 'Comment',
-    localField: '_id',
-    foreignField: 'post',
-    justOne: false
 })
 
 //create slug of post name

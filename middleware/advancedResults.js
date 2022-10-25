@@ -1,4 +1,4 @@
-const advancedResults = (model, populate) => async (req, res, next) => {
+const advancedResults = (model) => async (req, res, next) => {
     let query;
 
     // Copy req.query
@@ -41,10 +41,6 @@ const advancedResults = (model, populate) => async (req, res, next) => {
     const total = await model.countDocuments(JSON.parse(queryStr));
 
     query = query.skip(startIndex).limit(limit);
-
-    if (populate) {
-        query = query.populate(populate);
-    }
 
     // Executing query
     const results = await query;

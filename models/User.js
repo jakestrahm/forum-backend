@@ -48,19 +48,6 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-},
-    //TODO fix: this change has caused an extra id field
-    {
-        toJSON: { virtuals: true },
-        toObject: { virtuals: true }
-    })
-
-//reverse populate with virtuals
-UserSchema.virtual('posts', {
-    ref: 'Post',
-    localField: '_id',
-    foreignField: 'user',
-    justOne: false
 })
 
 //encrypt pass

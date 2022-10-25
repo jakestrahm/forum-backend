@@ -31,7 +31,7 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
 // @route get /api/v1/posts/:id
 // @access private
 exports.getPost = asyncHandler(async (req, res, next) => {
-    const post = await Post.findById(req.params.id).populate('user');
+    const post = await Post.findById(req.params.id)
 
     if (!post) {
         return next(new ErrorResponse(`no post with id of ${req.params.id}`), 404)
@@ -63,39 +63,35 @@ exports.postPost = asyncHandler(async (req, res, next) => {
 // @route put /api/v1/posts/:id
 // @access private
 exports.putPost = asyncHandler(async (req, res, next) => {
-
-    let post = await Post.findById(req.params.id)
-    console.log('inital post: ', post)
-    console.log("req.params.id", req.params.id)
+    let post = await Post.findById(req.params.id);
 
     if (!post) {
         return next(
-            new ErrorResponse(`post with id ${req.params.id} not found`, 404)
-        )
+            new ErrorResponse(`No post with the id of ${req.params.id}`, 404)
+        );
     }
 
-    //check if user should be able to perform operation 
-    if (req.user.id !== post.user.toString() && req.user.role !== 'admin') {
+    // make sure user is post owner
+    if (post.user.toString() !== req.user.id && req.user.role !== 'admin') {
         return next(
             new ErrorResponse(
-                `user ${req.user.id} is not authorized to access this route`,
+                `User ${req.user.id} is not authorized to update post ${post._id}`,
                 401
             )
         );
     }
 
-    post = await Post.findOneAndUpdate(req.params.id, req.body, {
+    post = await Post.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
-    })
+    });
 
-    console.log('post:', post)
+    post.save();
 
     res.status(200).json({
         success: true,
         data: post
     });
-
 });
 
 // @desc delete post by id

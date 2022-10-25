@@ -170,6 +170,9 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
         resetPasswordExpire: { $gt: Date.now() }
     });
 
+    console.log("req.params.resettoken", req.params.resettoken)
+    console.log("user", user)
+
     if (!user) {
         return next(new ErrorResponse('invalid token', 400));
     }

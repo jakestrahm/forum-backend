@@ -27,7 +27,7 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 // @route get /api/v1/comments/:id
 // @access private
 exports.getComment = asyncHandler(async (req, res, next) => {
-    const comment = await Comment.findById(req.params.id).populate('post');
+    const comment = await Comment.findById(req.params.id)
 
     if (!comment) {
         return next(new ErrorResponse(`no comment with id of ${req.params.id}`), 404)
@@ -71,35 +71,35 @@ exports.postComment = asyncHandler(async (req, res, next) => {
 // @route put /api/v1/comments/:id
 // @access private
 exports.putComment = asyncHandler(async (req, res, next) => {
-    let comment = await Comment.findById(req.params.id)
+    let comment = await Comment.findById(req.params.id);
 
     if (!comment) {
         return next(
-            new ErrorResponse(`comment with id ${req.params.id} not found`, 404)
-        )
+            new ErrorResponse(`No comment with the id of ${req.params.id}`, 404)
+        );
     }
 
-    //check if user should be able to perform operation 
-    if (req.user.id !== comment.user.toString() && req.user.role !== 'admin') {
+    // make sure user is comment owner
+    if (comment.user.toString() !== req.user.id && req.user.role !== 'admin') {
         return next(
             new ErrorResponse(
-                `user ${req.user.id} is not authorized to access this route`,
+                `User ${req.user.id} is not authorized to update comment ${comment._id}`,
                 401
             )
         );
     }
 
-
-    comment = await Comment.findOneAndUpdate(req.params.id, req.body, {
+    comment = await Comment.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
-    })
+    });
+
+    comment.save();
 
     res.status(200).json({
         success: true,
         data: comment
     });
-
 });
 
 // @desc delete comment by id
