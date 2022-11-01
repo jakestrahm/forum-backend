@@ -51,7 +51,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 // @desc      log user out / clear cookie
 // @route     get /api/v1/auth/logout
-// @access    public
+// @access    private
 exports.logout = asyncHandler(async (req, res, next) => {
     res.cookie('token', 'none', {
         expires: new Date(Date.now() + 10 * 1000),
@@ -104,11 +104,11 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.user.id).select('+password');
 
     // Check current password
-    if (!(await user.matchPassword(req.body.currentPassword))) {
+    if (!(await user.matchPassword(req.body.current_password))) {
         return next(new ErrorResponse('incorrect password', 401));
     }
 
-    user.password = req.body.newPassword;
+    user.password = req.body.new_password;
     await user.save();
 
     sendTokenResponse(user, 200, res);
@@ -146,8 +146,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         res.status(200).json({ success: true, data: 'email sent' });
     } catch (err) {
         console.log(err);
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
+        user.reset_password_token = undefined;
+        user.reset_password_expire = undefined;
 
         await user.save({ validateBeforeSave: false });
 
@@ -160,14 +160,14 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 // @access    public
 exports.resetPassword = asyncHandler(async (req, res, next) => {
     // get hashed token
-    const resetPasswordToken = crypto
+    const reset_password_token = crypto
         .createHash('sha256')
         .update(req.params.resettoken)
         .digest('hex');
 
     const user = await User.findOne({
-        resetPasswordToken,
-        resetPasswordExpire: { $gt: Date.now() }
+        reset_password_token,
+        reset_password_expire: { $gt: Date.now() }
     });
 
     console.log("req.params.resettoken", req.params.resettoken)
@@ -179,8 +179,8 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
     // set new password
     user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.reset_password_token = undefined;
+    user.reset_password_expire = undefined;
     await user.save();
 
     sendTokenResponse(user, 200, res);

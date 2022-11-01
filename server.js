@@ -7,6 +7,11 @@ const connectDB = require('./config/db')
 const cors = require('cors');
 const fileUpload = require('express-fileupload')
 const cookieParser = require('cookie-parser')
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const rateLimit = require('express-rate-limit')
+const hpp = require('hpp')
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
@@ -27,12 +32,14 @@ const PORT = process.env.PORT || 6006;
 //create express application
 const app = express();
 
+
 //configuring cors 
 const corsOpts = {
     origin: 'http://localhost:3000', //allow frontend
     credentials: true,
     optionSuccessStatus: 200
 }
+
 //use cors options 
 app.use(cors(corsOpts));
 
@@ -49,6 +56,26 @@ if (process.env.NODE_ENV === 'development') {
 
 //file uploading
 app.use(fileUpload())
+
+//sanitize input
+app.use(mongoSanitize())
+
+//set security headers
+app.use(helmet())
+
+//prevent xss 
+app.use(xss())
+
+//rate limiting
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, //10 minutes 
+    max: 100
+})
+
+app.use(limiter)
+
+//prevent http param pollution
+app.use(hpp())
 
 //set static folder 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -74,13 +101,3 @@ process.on('unhandledRejection', (err, promise) => {
     //close server and exit process
     server.close(() => process.exit(1));
 })
-
-/**
-    * TODO comment everything for them to understand
-    * TODO cascade delete? or do i want to store comments of deleted posts?  once a post is deleted, so should all comments that have that post id? well reddit still has it on their profile and when you click post it says it's deleted.
-    * TODO allow users to delete their own posts? comments? must be authorized
-    * TODO auth
-    * TODO aggregiation pipelines
-    * TODO figure out hosting
-**/
-
