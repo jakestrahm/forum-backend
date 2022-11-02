@@ -5,10 +5,6 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         required: [true, 'text cannot be empty'],
     },
-    score: {
-        type: Number,
-        default: 0
-    },
     creation_date: {
         type: Date,
         default: Date.now

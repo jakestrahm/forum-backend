@@ -19,7 +19,7 @@ router.use('/:postId/comments', commentRouter)
 
 router
     .route('/')
-    .get(advancedResults(Post), getPosts)
+    .get(advancedResults(Post, 'comments'), getPosts)
     .post(protect, authorize('admin'), postPost)
 
 router

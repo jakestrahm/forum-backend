@@ -21,10 +21,6 @@ const PostSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    score: {
-        type: Number,
-        default: 0
-    },
     creation_date: {
         type: Date,
         default: Date.now
@@ -35,7 +31,12 @@ const PostSchema = new mongoose.Schema({
         required: true
     }
 
-})
+},
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    }
+);
 
 //create slug of post name
 // arrow functions handle 'this' differently, this needs to be a regular function
@@ -43,5 +44,13 @@ PostSchema.pre('save', function(next) {
     this.slug = slugify(this.title, { lower: true });
     next();
 });
+
+//reverese populate comments 
+PostSchema.virtual('comments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'post',
+    justOne: false
+})
 
 module.exports = mongoose.model('Post', PostSchema)

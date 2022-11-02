@@ -34,10 +34,6 @@ const UserSchema = new mongoose.Schema({
         minlength: 6,
         select: false
     },
-    reputation: {
-        type: Number,
-        default: 0
-    },
     photo: {
         type: String,
         default: 'no-photo.jpg'
