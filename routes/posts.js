@@ -24,7 +24,7 @@ router
 
 router
     .route('/:id')
-    .get(getPost)
+    .get(advancedResults(Post, 'comments'), getPost)
     .put(protect, authorize('admin'), putPost)
     .delete(protect, authorize('admin'), deletePost)
 

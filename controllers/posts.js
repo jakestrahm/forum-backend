@@ -10,8 +10,6 @@ const User = require('../models/User')
 // @access private
 exports.getPosts = asyncHandler(async (req, res, next) => {
 
-    console.log("req.params.userId", req.params.userId)
-
     //check which route is being accessed
     if (req.params.userId) {
         //find all posts with "user" = userId
@@ -31,7 +29,7 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
 // @route get /api/v1/posts/:id
 // @access private
 exports.getPost = asyncHandler(async (req, res, next) => {
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id).populate('comments')
 
     if (!post) {
         return next(new ErrorResponse(`no post with id of ${req.params.id}`), 404)
