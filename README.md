@@ -6,7 +6,9 @@ with user accounts, posts, and comments. Key features include–
 
 built with Nodejs, Express, and MongoDB.
 
-## Live links 
+## Live links
+*if it's the first visit of the day, it'll take a minute or so to spin up.*
+
 - [Link to live backend](https://forum-backend-czwd.onrender.com/) <br/>
-    homepage contains complete documentation of api. beware, if it's the first visit of the day, it'll take one or two minutes to start up.
+    homepage contains complete documentation of api. 
 - [Link to (mnjibe's) live frontend]()
