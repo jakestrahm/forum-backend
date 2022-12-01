@@ -37,12 +37,4 @@ PostSchema.pre('save', function(next) {
     next();
 });
 
-//reverese populate comments 
-PostSchema.virtual('comments', {
-    ref: 'Comment',
-    localField: '_id',
-    foreignField: 'post',
-    justOne: false
-})
-
 module.exports = mongoose.model('Post', PostSchema)
