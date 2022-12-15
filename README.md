@@ -7,8 +7,8 @@ with user accounts, posts, and comments. Key features include–
 built with Nodejs, Express, and MongoDB.
 
 ## Live links
-*if it's the first visit of the day, it'll take around 30 seconds or so to spin up.*
+*if it's been visited a lot, the execution hours for the month may have been expended*
 
-- [Link to live backend](https://forum-backend-czwd.onrender.com/) <br/>
+- [Link to live backend](https://forum-backend-production.up.railway.app/) <br/>
     homepage contains complete documentation of api. 
 - [Link to (mnjibe's) live frontend]()
