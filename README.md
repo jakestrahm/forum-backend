@@ -11,5 +11,4 @@ built with Nodejs, Express, and MongoDB.
 
 - [Link to live backend](forum-production-17bf.up.railway.app) <br/>
     homepage contains complete documentation of api. 
-    
-~- [Link to (mnjibe's) live frontend]()~
+- ~[Link to (mnjibe's) live frontend]()~
