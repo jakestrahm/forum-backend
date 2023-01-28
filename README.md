@@ -1,10 +1,8 @@
 ## **A backend to power a forum**
-with user accounts, posts, and comments. Key features include– 
-- a RESTful API with advanced querying
-- user authentication, with password recovery via email
-- and security against NoSQL injection, XSS attacks, param pollution, and endpoint spam
-
-built with Nodejs, Express, and MongoDB.
+A forum akin to stackoverflow with user accounts, posts, and comments. Key features include–
+* a RESTful API with advanced querying using **Nodejs**, **Express**, **MongoDB** and **Mongoose**
+* user authentication, with password recovery via email using **JWT** and **Nodemailer** 
+* security against NoSQL injection, XSS attacks, param pollution, and endpoint spam utilizing **Helmet** 
 
 ## Live links
 *if it's been visited a lot, the execution hours for the month may have been expended*
