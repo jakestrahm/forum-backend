@@ -7,7 +7,7 @@ A forum akin to stackoverflow with user accounts, posts, and comments. Key featu
 ## Live links
 *if it's been visited a lot, the execution hours for the month may have been expended*
 
-- [Link to live backend](https://forum-production-17bf.up.railway.app/) <br/>
+- [Link to live backend](https://forum-backend-production.up.railway.app/) <br/>
     homepage contains complete documentation of api. 
     
 - ~[Link to (mnjibe's) live frontend]()~
