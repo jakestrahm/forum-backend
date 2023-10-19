@@ -4,13 +4,5 @@ A forum akin to stackoverflow with user accounts, posts, and comments. Key featu
 * user authentication, with password recovery via email using **JWT** and **Nodemailer** 
 * security against NoSQL injection, XSS attacks, param pollution, and endpoint spam utilizing **Helmet** 
 
-## Live links
-*if it's been visited a lot, the execution hours for the month may have been expended*
-
-- [Link to live backend](https://forum-backend-production.up.railway.app/) <br/>
-    homepage contains complete documentation of api. 
-    
-- ~[Link to (mnjibe's) live frontend]()~
-
 ### Screenshot of API documentation
 ![forum-production-17bf up railway app_](https://user-images.githubusercontent.com/46104507/211427855-03ec2998-4b49-4509-8f9d-7df397630b1c.png)
